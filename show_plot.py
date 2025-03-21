@@ -16,7 +16,7 @@ angle_range = (-90, 90)  # PHD 圖 X 軸角度範圍（度）
 distance_range = (35, 0)  # Y 軸距離範圍（cm）
 
 # 檔案路徑
-file_path = "rdi2.h5"  # 確保這個檔案在當前工作目錄下
+file_path = "bin2.h5"  # 確保這個檔案在當前工作目錄下
 
 # 讀取數據
 rdi_data, phd_data = read_h5_data(file_path)

@@ -1,0 +1,5 @@
+train: C:\Users\hcjoh\Desktop\113-2\switch\radar\Radar tracking\Radar-tracking\yolo_radar\dataset\train
+val: C:\Users\hcjoh\Desktop\113-2\switch\radar\Radar tracking\Radar-tracking\yolo_radar\dataset\val
+
+nc: 1
+names: ['Object']
