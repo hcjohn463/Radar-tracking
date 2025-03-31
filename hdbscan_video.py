@@ -9,7 +9,7 @@ from tqdm import tqdm
 from matplotlib import cm
 
 # 載入 RDI 資料
-file_path = "bin2.h5"
+file_path = "hand.h5"
 with h5py.File(file_path, 'r') as file:
     rdi_data = file['DS1'][0]
 num_frames = rdi_data.shape[2]
@@ -71,7 +71,7 @@ for frame_id in tqdm(range(num_frames), desc="Processing frames"):
     plt.close()
 
 # 將圖像轉為影片
-video_path = "hdbscan_result_video.mp4"
+video_path = "test_hand_hdbscan_result_video.mp4"
 frame_files = sorted([os.path.join(output_dir, f) for f in os.listdir(output_dir) if f.endswith(".png")])
 frame_example = cv2.imread(frame_files[0])
 height, width, _ = frame_example.shape

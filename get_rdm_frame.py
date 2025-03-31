@@ -7,6 +7,8 @@ from scipy.ndimage import label
 from itertools import product
 import pandas as pd
 import hdbscan
+import networkx as nx
+import seaborn as sns
 
 # 讀取 .h5 檔案
 def read_h5_data(file_path):
@@ -57,7 +59,7 @@ def ca_cfar_2d(rdm, guard_cells=(1, 1), reference_cells=(4, 4), scale_factor=1.5
     return binary_map   
 
 # 檔案路徑
-file_path = "bin2.h5"
+file_path = "hand.h5"
 
 # 讀取 RDI 數據
 rdi_data = read_h5_data(file_path)
@@ -107,7 +109,20 @@ binary_map = ca_cfar_2d(rdm_f32,
 coords = np.column_stack(np.where(binary_map == 1))
 
 # 建立 HDBSCAN 分群模型
-clusterer = hdbscan.HDBSCAN(min_cluster_size=3, min_samples=2)
+clusterer = hdbscan.HDBSCAN(min_cluster_size=3, min_samples=2, gen_min_span_tree=True)
+# 執行 fit 才會建立內部結構
+clusterer.fit(coords)
+
+# # 繪製 Minimum Spanning Tree
+# clusterer.minimum_spanning_tree_.plot(edge_cmap='viridis', edge_alpha=0.6, node_size=10)
+# plt.title(f"HDBSCAN Minimum Spanning Tree (Frame {frame_id})")
+# plt.show()
+
+# # 繪製 Condensed Tree 
+# clusterer.condensed_tree_.plot(select_clusters=True, selection_palette=sns.color_palette())
+# plt.title(f"HDBSCAN Condensed Tree (Frame {frame_id})")
+# plt.show()
+
 labels = clusterer.fit_predict(coords)
 
 # 找有幾群（不包含 label=-1 的雜訊）
@@ -120,21 +135,21 @@ range_resolution = 35 / h             # cm per range bin
 doppler_resolution = 0.3 / w          # cm/s per doppler bin
 doppler_center = w // 2
 
-# 把每一群的座標算出中心點
-for cluster_id in range(num_clusters):
-    cluster_points = coords[labels == cluster_id]
-    r_mean, d_mean = cluster_points.mean(axis=0)
-    print(f"目標 {cluster_id+1}: range_bin={r_mean:.2f}, doppler_bin={d_mean:.2f}")
+# # 把每一群的座標算出中心點
+# for cluster_id in range(num_clusters):
+#     cluster_points = coords[labels == cluster_id]
+#     r_mean, d_mean = cluster_points.mean(axis=0)
+#     print(f"目標 {cluster_id+1}: range_bin={r_mean:.2f}, doppler_bin={d_mean:.2f}")
 
-plt.imshow(binary_map, cmap='hot')
-plt.title(f"HDBSCAN clusters (Frame {frame_id})")
-for cluster_id in range(num_clusters):
-    cluster_points = coords[labels == cluster_id]
-    r_mean, d_mean = cluster_points.mean(axis=0)
-    plt.plot(d_mean, r_mean, 'bo')  # doppler 是橫軸，range 是縱軸
+# plt.imshow(binary_map, cmap='hot')
+# plt.title(f"HDBSCAN clusters (Frame {frame_id})")
+# for cluster_id in range(num_clusters):
+#     cluster_points = coords[labels == cluster_id]
+#     r_mean, d_mean = cluster_points.mean(axis=0)
+#     plt.plot(d_mean, r_mean, 'bo')  # doppler 是橫軸，range 是縱軸
 
-plt.colorbar()
-plt.show()
+# plt.colorbar()
+# plt.show()
 
 # 基本資訊
 h, w = binary_map.shape
