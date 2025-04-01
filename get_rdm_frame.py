@@ -71,6 +71,17 @@ frame_id = 0
 rdm = rdi_data[:, :, frame_id]
 rdm_f32 = np.array(rdm, dtype=np.float32)
 
+
+# 計算全圖平均值
+threshold = np.mean(rdm_f32)
+
+# 用全圖平均值當門檻產生 binary map
+binary_map_mean = (rdm_f32 > threshold).astype(np.uint8)
+# 全圖平均門檻 binary map
+plt.imshow(binary_map_mean, cmap='gray', aspect='auto')
+plt.title("Global Mean Threshold")
+plt.show()
+
 # # 設定橫軸與縱軸的範圍
 # velocity_bins = rdm_f32.shape[1]
 # range_bins = rdm_f32.shape[0]
