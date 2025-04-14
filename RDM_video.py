@@ -11,7 +11,7 @@ def read_h5_data(file_path):
     return rdi_data
 
 # 檔案路徑
-file_path = "hand.h5"
+file_path = "bin1.h5"
 
 # 讀取 RDI 數據
 rdi_data = read_h5_data(file_path)
@@ -49,7 +49,7 @@ for frame_id in tqdm(range(num_frames), desc="Rendering RDM images"):
     plt.close()
 
 # 將 RDM 圖片轉成影片
-rdm_video_path = "hand_rdm_raw_video.mp4"
+rdm_video_path = "bin1_rdm_raw_video.mp4"
 rdm_frame_files = sorted([os.path.join(rdm_output_dir, f) for f in os.listdir(rdm_output_dir) if f.endswith(".png")])
 frame_example = cv2.imread(rdm_frame_files[0])
 height, width, _ = frame_example.shape
